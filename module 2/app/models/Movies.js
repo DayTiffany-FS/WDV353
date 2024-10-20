@@ -8,6 +8,10 @@ const moviesSchema = new mongoose.Schema({
         trim: true,
         maxlength: [50, "Your movie title is too long."],
     },
+    director: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Director'
+    }
 });
 
 module.exports = mongoose.model('Movie', moviesSchema);
