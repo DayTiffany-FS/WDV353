@@ -24,7 +24,7 @@ const getMoviebyID = async (req, res) => {
 const createMovie = async (req, res) => {
     const { movie } = req.body;
     try{
-        const newMovie = await Moviess.create(director);
+        const newMovie = await Moviess.create(movie);
         console.log("data >>>", newMovie);
         res.status(200).json({
             sucess: true, 
