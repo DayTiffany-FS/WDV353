@@ -1,4 +1,6 @@
 const Movies = require("../models/Movies");
+const Director = require("../models/Directors");
+const movie = require("../models/Movies");
 
 const getAllMovies = async (req, res) => {
     const movies = await Movies.find({});
@@ -11,7 +13,7 @@ const getAllMovies = async (req, res) => {
 
 const getMoviebyID = async (req, res) => {
     const { id } = req.params;
-    const movie = await Movies.findById(id, body.req, {
+    const movies = await Movies.findById(id, body.req, {
         new: true
     })
     res.status(200).json({
@@ -22,22 +24,24 @@ const getMoviebyID = async (req, res) => {
 };
 
 const createMovie = async (req, res) => {
-    const { movie } = req.body;
     try{
-        const newMovie = await Moviess.create(movie);
-        console.log("data >>>", newMovie);
+        const { Movies } = req.body;
+        const user = await Director.findById(movie.director);
+        Movies.director = user;
+        const movieData = new Movie(Movies);
+        user.Movies.push(movieData._id);
+        const queries = [movieData.save(), user.save()];
+        await Promise.all(queries);
         res.status(200).json({
+            data: movieData,
             sucess: true, 
             message: `${req.method} - request to Movie endpoint`,
         });
-    } catch(error) {
-        if (error.name == "ValidationError") {
-            console.error("Error Validating!", error);
-            res.status(422).json(error);
-        } else {
-            console.error(error);
-            res.status(500).json(error);
-        }
+    } catch({message}) {
+        res.status(500).json({
+            success: false,
+            message,
+        });
     }
 };
 

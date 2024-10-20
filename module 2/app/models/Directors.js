@@ -14,7 +14,7 @@ const directorsSchema = new mongoose.Schema({
         trim: true,
         maxlength: [50, "Your last name is too long."],
     },
-    movieTitle: [{
+    movies: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Movie'
     }],
