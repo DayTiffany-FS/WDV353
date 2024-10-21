@@ -3,7 +3,32 @@ const Director = require("../models/Directors");
 const movie = require("../models/Movies");
 
 const getAllMovies = async (req, res) => {
-    const movies = await Movies.find({});
+
+    let queryString = JSON.stringify(req.query);
+    queryString = 
+        queryString.replace(/\b(gt|gte|lt|lte)\b/g, 
+        match => `$${match}`);
+
+    let query = Movies.find(JSON.parse(queryString));
+
+    if (req.query.select) {
+        const fields = req.query.select.split(",").join(" ");
+        query = Movies.find({}).select(fields);
+    }
+
+    if (req.req.sort) {
+        const sortBy = req.query.sort.split(",").join(" ");
+        query = Movies.find({}).select(sortBy);
+    }
+
+    query = Movies.find({});
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.page) || 2;
+    const skip = (page - 1) * limit;
+
+    query.skip(skip).limit(limit);
+
+    const movies = await query;
     res.status(200).json({
         data: movies,
         sucess: true, 
